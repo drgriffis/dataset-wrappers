@@ -59,10 +59,10 @@ def truncate(string):
     else:
         return string
 
-def parse(fpath):
+def parse(fpath, include_freqs=False):
     '''Parses NELL data and returns a list of Triple objects,
-    the set of unique entities (with frequencies), and the
-    set of unique relations (with frequencies).
+    the set of unique entities (optionally with frequencies), and the
+    set of unique relations (optionally with frequencies).
     
     Line components taken from http://rtw.ml.cmu.edu/rtw/faq
     '''
@@ -98,6 +98,11 @@ def parse(fpath):
     # convert tracking dictionaries to lists
     entities = list(entities.values())
     relations = [FreqPair(k,v) for (k,v) in relations.items()]
+
+    # if not including frequency information, reduce to core objects
+    if not include_freqs:
+        entities = [e.item for e in entities]
+        relations = [r.item for r in relations]
 
     return triples, entities, relations
 
